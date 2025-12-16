@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/v1/:path*",
+      "destination": "http://213.136.75.60:8080/v1/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
