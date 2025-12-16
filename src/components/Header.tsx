@@ -1,22 +1,24 @@
-import { ShoppingCart, Menu, X, Zap } from 'lucide-react';
+import { ShoppingCart, Menu, X, Sparkles, Scale } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
+import { useCompare } from '@/context/CompareContext';
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { totalItems, setIsCartOpen } = useCart();
+  const { compareItems, setIsCompareOpen } = useCompare();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="relative">
-              <Zap className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
-              <div className="absolute inset-0 bg-primary/30 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Sparkles className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
+              <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <span className="font-display text-xl md:text-2xl font-bold text-gradient">
               GammaComerce
@@ -46,7 +48,23 @@ const Header = () => {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            {/* Compare Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={() => setIsCompareOpen(true)}
+            >
+              <Scale className="w-5 h-5" />
+              {compareItems.length > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs font-bold rounded-full flex items-center justify-center">
+                  {compareItems.length}
+                </span>
+              )}
+            </Button>
+
+            {/* Cart Button */}
             <Button
               variant="ghost"
               size="icon"
@@ -55,7 +73,7 @@ const Header = () => {
             >
               <ShoppingCart className="w-5 h-5" />
               {totalItems > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-bold rounded-full flex items-center justify-center animate-pulse-glow">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-bold rounded-full flex items-center justify-center">
                   {totalItems}
                 </span>
               )}

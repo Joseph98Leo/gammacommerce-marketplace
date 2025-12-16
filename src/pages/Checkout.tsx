@@ -4,15 +4,16 @@ import { ArrowLeft, CreditCard, ShieldCheck, Lock } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
+import PaymentSuccessDialog from '@/components/PaymentSuccessDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCart } from '@/context/CartContext';
-import { toast } from 'sonner';
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,9 +22,9 @@ const Checkout = () => {
     // Simulate payment processing
     await new Promise((resolve) => setTimeout(resolve, 2000));
     
-    toast.success('¡Pedido realizado con éxito!');
     clearCart();
     setIsProcessing(false);
+    setShowSuccessDialog(true);
   };
 
   if (items.length === 0) {
@@ -207,6 +208,7 @@ const Checkout = () => {
       </main>
       <Footer />
       <CartDrawer />
+      <PaymentSuccessDialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog} />
     </div>
   );
 };

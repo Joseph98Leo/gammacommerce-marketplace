@@ -51,10 +51,12 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gamma: {
-          DEFAULT: "hsl(var(--gamma-glow))",
-          cyan: "hsl(var(--gamma-cyan))",
-          dark: "hsl(var(--gamma-dark))",
+        pastel: {
+          lavender: "hsl(var(--pastel-lavender))",
+          mint: "hsl(var(--pastel-mint))",
+          peach: "hsl(var(--pastel-peach))",
+          pink: "hsl(var(--pastel-pink))",
+          sky: "hsl(var(--pastel-sky))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
