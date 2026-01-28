@@ -135,7 +135,7 @@ function StripePaymentInner({
         try {
             // 1) Crear PaymentIntent en backend
             const intent = await createPaymentIntent({
-                amount,
+                amount: String(amount), // Backend expects string, not number
                 description: orderId ? `Order #${orderId}` : "GammaCommerce Order",
             });
 

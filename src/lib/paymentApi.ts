@@ -77,7 +77,7 @@ export async function getStripeConfig(): Promise<StripeConfigResponse> {
 }
 
 export async function createPaymentIntent(input: {
-    amount: number;
+    amount: string; // Backend expects string
     description: string;
 }): Promise<CreatePaymentIntentResponse> {
     const url = `${STRIPE_BASE}/create-payment-intent`;
