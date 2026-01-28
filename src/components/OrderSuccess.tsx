@@ -3,6 +3,7 @@ import { CheckCircle2, Package, ShoppingBag, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import { useCart } from '@/context/CartContext';
 
 interface OrderSuccessProps {
     orderDetails: {
@@ -14,6 +15,7 @@ interface OrderSuccessProps {
 
 export default function OrderSuccess({ orderDetails }: OrderSuccessProps) {
     const navigate = useNavigate();
+    const { clearCart } = useCart();
 
     useEffect(() => {
         const duration = 3000;
@@ -41,7 +43,15 @@ export default function OrderSuccess({ orderDetails }: OrderSuccessProps) {
         };
 
         frame();
-    }, []);
+
+        // Clear cart after confetti animation completes
+        const clearCartTimer = setTimeout(() => {
+            console.log('🧹 Clearing cart after successful payment...');
+            clearCart();
+        }, duration + 500); // Clear cart 500ms after confetti ends
+
+        return () => clearTimeout(clearCartTimer);
+    }, [clearCart]);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-background via-background to-secondary/10 flex items-center justify-center p-4">

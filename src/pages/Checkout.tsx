@@ -124,11 +124,11 @@ const Checkout = () => {
                     amount={totalPrice}
                     orderId={`ORDER-${Date.now()}`}
                     onSuccess={(result) => {
-                      console.log('Payment successful:', result);
-                      // IMPORTANT: Set order details FIRST before clearing cart
-                      // Otherwise the empty cart condition triggers before success page shows
+                      console.log('✅ Payment successful:', result);
+                      console.log('🎯 Setting order details...');
                       setOrderDetails(result);
-                      setTimeout(() => clearCart(), 100); // Small delay to ensure state updates
+                      // DON'T clear cart here - let user see the success page first
+                      // Cart will be cleared when they navigate away
                     }}
                     onError={(error) => {
                       console.error('Payment error:', error);
