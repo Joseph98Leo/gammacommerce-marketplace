@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import PaymentSuccessDialog from '@/components/PaymentSuccessDialog';
 import StripePayment from '@/components/StripePayment';
+import OrderSuccess from '@/components/OrderSuccess';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -14,6 +15,16 @@ import { useCart } from '@/context/CartContext';
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [orderDetails, setOrderDetails] = useState<{
+    paymentIntentId: string;
+    amount: number;
+    orderId?: string;
+  } | null>(null);
+
+  // Show success page if payment completed
+  if (orderDetails) {
+    return <OrderSuccess orderDetails={orderDetails} />;
+  }
 
   if (items.length === 0) {
     return (
@@ -114,8 +125,8 @@ const Checkout = () => {
                     orderId={`ORDER-${Date.now()}`}
                     onSuccess={(result) => {
                       console.log('Payment successful:', result);
+                      setOrderDetails(result);
                       clearCart();
-                      setShowSuccessDialog(true);
                     }}
                     onError={(error) => {
                       console.error('Payment error:', error);
