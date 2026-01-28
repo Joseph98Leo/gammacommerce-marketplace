@@ -10,9 +10,10 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     proxy: {
       "/v1": {
-        target: "http://213.136.75.60:8080",
+        target: "https://gamacommerce.lat",
         changeOrigin: true,
         secure: false,
+        rewrite: (path) => path,
       },
     },
   },

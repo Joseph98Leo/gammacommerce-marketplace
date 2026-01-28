@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, CreditCard, ShieldCheck, Lock } from 'lucide-react';
+import { ArrowLeft, CreditCard, ShieldCheck } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import PaymentSuccessDialog from '@/components/PaymentSuccessDialog';
+import StripePayment from '@/components/StripePayment';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,20 +13,7 @@ import { useCart } from '@/context/CartContext';
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
-  const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(true);
-    
-    // Simulate payment processing
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    clearCart();
-    setIsProcessing(false);
-    setShowSuccessDialog(true);
-  };
 
   if (items.length === 0) {
     return (
@@ -66,7 +54,7 @@ const Checkout = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Form */}
             <div>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-6">
                 {/* Contact Info */}
                 <div className="p-6 bg-card rounded-xl border border-border">
                   <h2 className="font-display text-xl font-bold mb-4">Información de Contacto</h2>
@@ -121,53 +109,34 @@ const Checkout = () => {
                     <CreditCard className="w-5 h-5 text-primary" />
                     Información de Pago
                   </h2>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="cardNumber">Número de Tarjeta</Label>
-                      <Input id="cardNumber" placeholder="1234 5678 9012 3456" className="mt-1" required />
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="expiry">Fecha de Expiración</Label>
-                        <Input id="expiry" placeholder="MM/AA" className="mt-1" required />
-                      </div>
-                      <div>
-                        <Label htmlFor="cvv">CVV</Label>
-                        <Input id="cvv" placeholder="123" className="mt-1" required />
-                      </div>
-                    </div>
-                  </div>
+                  <StripePayment
+                    amount={totalPrice}
+                    orderId={`ORDER-${Date.now()}`}
+                    onSuccess={(result) => {
+                      console.log('Payment successful:', result);
+                      clearCart();
+                      setShowSuccessDialog(true);
+                    }}
+                    onError={(error) => {
+                      console.error('Payment error:', error);
+                      alert(`Error en el pago: ${error}`);
+                    }}
+                    buttonText={`Pagar $${totalPrice.toFixed(2)}`}
+                  />
                 </div>
-
-                <Button
-                  type="submit"
-                  variant="gamma"
-                  size="lg"
-                  className="w-full"
-                  disabled={isProcessing}
-                >
-                  {isProcessing ? (
-                    <>Procesando...</>
-                  ) : (
-                    <>
-                      <Lock className="w-5 h-5" />
-                      Pagar ${totalPrice.toFixed(2)}
-                    </>
-                  )}
-                </Button>
 
                 <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm">
                   <ShieldCheck className="w-4 h-4" />
                   Pago seguro y encriptado
                 </div>
-              </form>
+              </div>
             </div>
 
             {/* Order Summary */}
             <div>
               <div className="p-6 bg-card rounded-xl border border-border sticky top-28">
                 <h2 className="font-display text-xl font-bold mb-6">Resumen del Pedido</h2>
-                
+
                 <div className="space-y-4 max-h-80 overflow-y-auto mb-6">
                   {items.map((item) => (
                     <div key={item.product.id} className="flex gap-4">
