@@ -67,7 +67,7 @@ const CartDrawer = () => {
                   <div className="flex-1">
                     <h3 className="font-medium text-sm line-clamp-2">{item.product.name}</h3>
                     <p className="text-primary font-bold mt-1">
-                      ${item.product.price.toFixed(2)}
+                      S/{item.product.price.toFixed(2)}
                     </p>
                     <div className="flex items-center gap-2 mt-2">
                       <Button
@@ -109,7 +109,7 @@ const CartDrawer = () => {
             <div className="flex items-center justify-between">
               <span className="text-muted-foreground">Subtotal</span>
               <span className="font-display text-2xl font-bold text-gradient">
-                ${totalPrice.toFixed(2)}
+                S/{totalPrice.toFixed(2)}
               </span>
             </div>
             <Button variant="gamma" className="w-full" size="lg" onClick={handleCheckout}>

@@ -24,20 +24,20 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const handleCompare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (isInCompare(product.id)) {
       setIsCompareOpen(true);
       return;
     }
-    
+
     if (compareItems.length >= 4) {
       toast.error('Solo puedes comparar hasta 4 productos');
       return;
     }
-    
+
     addToCompare(product);
     toast.success(`${product.name} añadido a comparación`);
-    
+
     if (compareItems.length >= 1) {
       setIsCompareOpen(true);
     }
@@ -56,7 +56,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+
         {/* Quick Actions */}
         <div className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
           <Button
@@ -71,7 +71,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <Button variant="secondary" size="sm">
             <Eye className="w-4 h-4" />
           </Button>
-          <Button 
+          <Button
             variant={isInCompare(product.id) ? "default" : "outline"}
             size="sm"
             onClick={handleCompare}
@@ -115,7 +115,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         {/* Price */}
         <div className="flex items-center justify-between">
           <span className="font-display text-xl font-bold text-gradient">
-            ${product.price.toFixed(2)}
+            S/{product.price.toFixed(2)}
           </span>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { ShoppingCart, Menu, X, ShoppingBag, Scale } from 'lucide-react';
+import { ShoppingCart, Menu, X, Scale } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -16,12 +16,8 @@ const Header = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative">
-              <ShoppingBag className="w-8 h-8 text-primary transition-transform group-hover:scale-110" />
-              <div className="absolute inset-0 bg-primary/20 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
             <span className="font-display text-xl md:text-2xl font-bold text-gradient">
-              GammaComerce
+              GammaCommerce
             </span>
           </Link>
 

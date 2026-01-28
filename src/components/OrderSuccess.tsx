@@ -95,7 +95,7 @@ export default function OrderSuccess({ orderDetails }: OrderSuccessProps) {
                                 </div>
                                 <div className="flex justify-between items-center pt-2 border-t border-border">
                                     <span className="text-muted-foreground">Total Pagado:</span>
-                                    <span className="text-2xl font-bold text-primary">${orderDetails.amount.toFixed(2)}</span>
+                                    <span className="text-2xl font-bold text-primary">S/{orderDetails.amount.toFixed(2)}</span>
                                 </div>
                             </div>
                         </div>

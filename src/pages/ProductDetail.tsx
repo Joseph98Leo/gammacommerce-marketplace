@@ -127,7 +127,7 @@ const ProductDetail = () => {
               {/* Price */}
               <div className="mb-8">
                 <span className="font-display text-4xl font-bold text-gradient">
-                  ${product.price.toFixed(2)}
+                  S/{product.price.toFixed(2)}
                 </span>
               </div>
 

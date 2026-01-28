@@ -134,7 +134,7 @@ const Checkout = () => {
                       console.error('Payment error:', error);
                       alert(`Error en el pago: ${error}`);
                     }}
-                    buttonText={`Pagar $${totalPrice.toFixed(2)}`}
+                    buttonText={`Pagar S/${totalPrice.toFixed(2)}`}
                   />
                 </div>
 
@@ -163,7 +163,7 @@ const Checkout = () => {
                         <p className="text-muted-foreground text-sm">Cantidad: {item.quantity}</p>
                       </div>
                       <span className="font-semibold">
-                        ${(item.product.price * item.quantity).toFixed(2)}
+                        S/{(item.product.price * item.quantity).toFixed(2)}
                       </span>
                     </div>
                   ))}
@@ -172,7 +172,7 @@ const Checkout = () => {
                 <div className="border-t border-border pt-4 space-y-3">
                   <div className="flex justify-between text-muted-foreground">
                     <span>Subtotal</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>S/{totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-muted-foreground">
                     <span>Envío</span>
@@ -180,7 +180,7 @@ const Checkout = () => {
                   </div>
                   <div className="flex justify-between font-display text-xl font-bold pt-3 border-t border-border">
                     <span>Total</span>
-                    <span className="text-gradient">${totalPrice.toFixed(2)}</span>
+                    <span className="text-gradient">S/{totalPrice.toFixed(2)}</span>
                   </div>
                 </div>
               </div>

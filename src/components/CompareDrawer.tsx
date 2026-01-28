@@ -79,7 +79,7 @@ const CompareDrawer = () => {
                     <td className="py-3 text-muted-foreground">Precio</td>
                     {compareItems.map((item) => (
                       <td key={item.id} className="py-3 text-center font-display font-bold text-primary">
-                        ${item.price.toFixed(2)}
+                        S/{item.price.toFixed(2)}
                       </td>
                     ))}
                   </tr>

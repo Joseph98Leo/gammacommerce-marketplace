@@ -200,7 +200,7 @@ function StripePaymentInner({
                 ) : (
                     <>
                         <Lock className="w-5 h-5" />
-                        {buttonText ?? `Pagar $${amount.toFixed(2)}`}
+                        {buttonText ?? `Pagar S/${amount.toFixed(2)}`}
                     </>
                 )}
             </Button>
