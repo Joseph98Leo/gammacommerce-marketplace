@@ -32,6 +32,22 @@ export interface CategoryDTO {
   promotionDTOList?: PromotionDTO[] | null;
 }
 
+// New interface for itemProduct endpoint response
+export interface ProductItemDetailDTO {
+  productItemId: number;
+  productItemSKU: string;
+  productItemQuantityInStock: number;
+  productItemImage: string;
+  companyName: string;
+  companyRuc: string;
+  companyImage: string | null;
+  companyTradeName: string;
+  companyId: number;
+  productItemPrice: number;
+  responseCategoryy: CategoryDTO;
+  variations: Array<{ variationName: string; options: string }>;
+}
+
 export interface ProductItemDTO {
   productItemId: number;
   productId: number;
@@ -63,23 +79,30 @@ export interface ProductListData {
   end: boolean;
 }
 
+export interface ProductItemListData {
+  responseProductList: ProductItemDetailDTO[];
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  end: boolean;
+}
+
 /**
  * MODELOS "limpios" para tu frontend (manteniendo tus interfaces originales).
- * Nota: como tu backend no manda company por producto, lo dejamos como null.
+ * Ahora company SÍ se incluye gracias al endpoint itemProduct/pageable
  */
 export interface Product {
   id: number;
   name: string;
   description: string;
 
-  // Tomamos el primer item como "principal" para price/stock/image.
-  // Si no hay items, ponemos defaults.
   price: number;
   stock: number;
   imageUrl: string;
 
   category: Category | null;
-  company: Company | null; // backend no lo envía en este endpoint
+  company: Company | null;
 }
 
 export interface Category {
@@ -136,29 +159,42 @@ function mapProduct(dto: ProductDTO): Product {
   };
 }
 
+function mapProductItem(dto: ProductItemDetailDTO): Product {
+  return {
+    id: dto.productItemId,
+    name: dto.productItemSKU,
+    description: dto.productItemSKU,
+    price: dto.productItemPrice,
+    stock: dto.productItemQuantityInStock,
+    imageUrl: dto.productItemImage,
+    category: mapCategory(dto.responseCategoryy),
+    company: {
+      id: dto.companyId,
+      name: dto.companyTradeName || dto.companyName,
+      description: dto.companyName,
+      logoUrl: dto.companyImage || "",
+    },
+  };
+}
+
 export const api = {
   /**
-   * ✅ GET products (lista)
-   * Backend: /product-service/product/list
-   * Retorna Product[] ya "mapeado" al modelo de tu app
+   * ✅ GET products (lista) - NOW using itemProduct/pageable with company data
+   * Backend: /product-service/itemProduct/pageable
+   * Retorna Product[] ya "mapeado" al modelo de tu app CON info de company
    */
   async getProducts(): Promise<Product[]> {
-    const json = await fetchJson<ApiResponse<ProductListData>>(
-      `${BASE_URL}/product-service/product/list`
+    const json = await fetchJson<ApiResponse<ProductItemListData>>(
+      `${BASE_URL}/product-service/itemProduct/pageable`
     );
 
     const list = json?.data?.responseProductList ?? [];
-    return list.map(mapProduct);
+    return list.map(mapProductItem);
   },
 
   /**
    * ✅ GET product by id
-   * Si tu backend NO tiene endpoint directo por id, lo resolvemos filtrando
-   * desde la lista (simple y funcional para MVP).
-   *
-   * Si luego tienes un endpoint tipo:
-   * /product-service/product/{id}
-   * me lo pasas y lo ajusto.
+   * Filtra desde la lista de itemProduct
    */
   async getProduct(id: number): Promise<Product> {
     const products = await this.getProducts();
@@ -169,17 +205,12 @@ export const api = {
 
   /**
    * ✅ GET categories
-   * OJO: tu backend de categorías (según tu mensaje anterior) suele ser:
-   * /product-service/category/list/pageable
-   * Aquí lo dejo apuntando a ese. Si tu ruta final cambia, la ajustamos.
    */
   async getCategories(): Promise<Category[]> {
-    // Ajusta si tu respuesta de categorías viene con wrapper distinto
     const json = await fetchJson<any>(
       `${BASE_URL}/product-service/category/list/pageable`
     );
 
-    // Intenta leer lista común: data.responseCategoryList
     const list: any[] = json?.data?.responseCategoryList ?? [];
 
     return list.map((c) => ({
@@ -192,10 +223,6 @@ export const api = {
 
   /**
    * ✅ GET products by category
-   * Como no nos diste endpoint filtro por categoría,
-   * lo resolvemos filtrando desde getProducts().
-   *
-   * Si tienes endpoint real (mejor), pásamelo y lo cambiamos.
    */
   async getProductsByCategory(categoryId: number): Promise<Product[]> {
     const products = await this.getProducts();
@@ -204,17 +231,8 @@ export const api = {
 
   /**
    * ✅ GET companies
-   * No tenemos tu endpoint real de companies en el backend nuevo,
-   * así que lo dejo comentado/placeholder.
-   * Pásame tu ruta real (ej: /company-service/company/list) y lo ajusto.
    */
   async getCompanies(): Promise<Company[]> {
-    // TODO: reemplaza por tu endpoint real
-    // const json = await fetchJson<ApiResponse<{ responseCompanyList: any[] }>>(
-    //   `${BASE_URL}/company-service/company/list`
-    // );
-    // return (json.data.responseCompanyList ?? []).map(mapCompany);
-
     return [];
   },
 };
