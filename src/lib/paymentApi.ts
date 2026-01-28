@@ -80,12 +80,33 @@ export async function createPaymentIntent(input: {
     amount: number;
     description: string;
 }): Promise<CreatePaymentIntentResponse> {
-    const res = await fetch(`${STRIPE_BASE}/create-payment-intent`, {
-        method: "POST",
-        headers: buildHeaders(), // ✅ y aquí
-        body: JSON.stringify(input),
-    });
+    const url = `${STRIPE_BASE}/create-payment-intent`;
+    const headers = buildHeaders();
+    const body = JSON.stringify(input);
 
-    const json = await parseJson<{ data: CreatePaymentIntentResponse }>(res);
-    return json.data;
+    console.log('💳 Creating Payment Intent');
+    console.log('📍 URL:', url);
+    console.log('📤 Headers:', headers);
+    console.log('📦 Body:', body);
+    console.log('💰 Amount:', input.amount);
+    console.log('📝 Description:', input.description);
+
+    try {
+        const res = await fetch(url, {
+            method: "POST",
+            headers,
+            body,
+        });
+
+        console.log('📡 Response status:', res.status);
+        console.log('📡 Response ok:', res.ok);
+        console.log('📡 Response headers:', Object.fromEntries(res.headers.entries()));
+
+        const json = await parseJson<{ data: CreatePaymentIntentResponse }>(res);
+        console.log('✅ Payment Intent created successfully');
+        return json.data;
+    } catch (error) {
+        console.error('❌ Error creating payment intent:', error);
+        throw error;
+    }
 }
